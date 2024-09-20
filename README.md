@@ -3,9 +3,9 @@ This GitHub project is part of the 'DevOps Beginners to Advanced' course on Udem
 
 It will be set up locally, automated and the entire infrastructure will be on a code.
 # 0.2 Prerequisites
-- A HyperVisor, in my case Oracle Virtual Box:
-- Vagrant, to create the VMs in a "automate" way.
-- Git Bash, for CLI (Command Line Interface).
+- A HyperVisor, in my case Oracle Virtual Box,
+- Vagrant, to create the VMs in a "automate" way,
+- Git Bash, for CLI (Command Line Interface),
 - VSCode, for IDE (Integrated Development Environment).
   
 # 1.0 Creating the Virtual Machines.
