@@ -4,6 +4,30 @@ This GitHub project is part of the 'DevOps Beginners to Advanced' course on Udem
 
 # 1.0 Creating the Virtual Machines.
 
+Firstly, we will be using Vagrant to create the Virtual Machines. Understanding how Vagrant works it is crucial:
+
+1. like creating a folder where we wil be storing our Virtual Machines.
+
+```
+mkdir carpeta_nueva
+```
+
+2. Initialize a new Vagrant environment by creating a Vagrantfile in the current directory:
+
+> [!TIP]
+> We need to be in the folder we just made.
+>
+> And, I personally recommend checking if we have any other Virtual Machine turned on. And if >there is any, turn them off.
+>```
+>vagrant global-status
+>```
+
+```
+vagrant up
+```
+
+It's
+
 ```
 Vagrant.configure("2") do |config|
   config.hostmanager.enabled = true 
