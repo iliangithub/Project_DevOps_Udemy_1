@@ -1,7 +1,18 @@
 # 0.1 Introduction
-This GitHub project is part of the 'DevOps Beginners to Advanced' course on Udemy, as part of the project to use Vagrant, Nginx, Tomcat, RabbitMQ, Memcached, and MySQL:  This stack is used to create a website.
+This GitHub project is part of the "DevOps Beginners to Advanced" course on Udemy. As part of the project, the following stack is used: Vagrant, Nginx, Tomcat, RabbitMQ, Memcached, and MySQL.
 
-It will be set up locally, automated and the entire infrastructure will be on a code.
+We are using this stack to create a website. It will be set up locally, automated and the entire infrastructure will be on a code.
+
+## 0.1.1 Architecture design of the project.
+
+This is the flow, 
+
+![image](https://github.com/user-attachments/assets/d9490409-f168-4bc6-99da-f464c3d12783)
+
+And each service and "aplication" will have is own VM:
+
+
+
 # 0.2 Prerequisites
 - A HyperVisor, in my case Oracle Virtual Box,
 - Vagrant, to create the VMs in a "automate" way,
