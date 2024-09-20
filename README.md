@@ -40,7 +40,7 @@ mkdir carpeta_nueva
 >```
 
 ```
-vagrant up
+vagrant init
 ```
 
 Now, let's check what have we done so far:
@@ -118,4 +118,10 @@ Vagrant.configure("2") do |config|
 end
   
 end
+```
+
+And if we have everything ready:
+
+```
+vagrant up
 ```
