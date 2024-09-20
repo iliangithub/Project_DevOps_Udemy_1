@@ -32,7 +32,7 @@ Now, let's check what have we done so far:
 ls -a
 ```
 
-And there has to be a "Vagrantfile", then edit it with whatever text editor you want, I used VSCode. And paste this entire configuration:
+**And there has to be a "Vagrantfile"**, then edit it with whatever text editor you want, I used VSCode. And **paste this entire configuration**:
 
 ```
 Vagrant.configure("2") do |config|
