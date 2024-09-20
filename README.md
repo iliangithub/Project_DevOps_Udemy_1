@@ -1,7 +1,13 @@
 # 0.1 Introduction
 This GitHub project is part of the 'DevOps Beginners to Advanced' course on Udemy, as part of the project to use Vagrant, Nginx, Tomcat, RabbitMQ, Memcached, and MySQL:  This stack is used to create a website.
-# 0.2 Prerequisites
 
+It will be set up locally, automated and the entire infrastructure will be on a code.
+# 0.2 Prerequisites
+- A HyperVisor, in my case Oracle Virtual Box:
+- Vagrant, to create the VMs in a "automate" way.
+- Git Bash, for CLI (Command Line Interface).
+- VSCode, for IDE (Integrated Development Environment).
+  
 # 1.0 Creating the Virtual Machines.
 
 Firstly, we will be using Vagrant to create the Virtual Machines. Understanding how Vagrant works it is crucial, like:
