@@ -46,9 +46,9 @@ Vagrant.configure("2") do |config|
     db01.vm.hostname = "db01"
     db01.vm.network "private_network", ip: "192.168.56.15"
     db01.vm.provider "virtualbox" do |vb|
+     vb.name = "DatabaseServer01"
      vb.memory = "600"
    end
-
   end
   
 ### Memcache vm  #### 
