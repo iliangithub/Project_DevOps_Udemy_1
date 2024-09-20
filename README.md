@@ -16,7 +16,7 @@ And each service and "aplication" will have is own VM:
 # 0.2 Prerequisites
 - A HyperVisor, in my case Oracle Virtual Box,
 - Vagrant, to create the VMs in a "automate" way,
-  >[!WARNING]
+  > [!WARNING]
   >And we need, this plugin.
   >```
   >Vagrant plugin install vagrant-hostmanager
