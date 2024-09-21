@@ -131,3 +131,34 @@ And if we have everything ready:
 ```
 vagrant up
 ```
+
+After the creation of all the VM, let us see what it is inside of one of the VM. For example, the "db01".
+
+```
+vagrant ssh db01
+```
+
+`/etc/hosts` is a file used to map domain names or Hostnames to IP addresses locally.
+If we see:
+
+```
+cat /etc/hosts
+
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+127.0.1.1 db01 db01
+
+## vagrant-hostmanager-start
+192.168.56.12   app01
+
+192.168.56.15   db01
+
+192.168.56.14   mc01
+
+192.168.56.13   rmq01
+
+192.168.56.11   web01
+
+## vagrant-hostmanager-end
+
+```
