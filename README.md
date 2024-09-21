@@ -200,3 +200,8 @@ It is a great opportunity to test the connectivity with the rest of the machines
 ```
 ping web01 -c 4
 ```
+# 1.1 Configuring the VM, or creating them again.
+
+It depends on our needs, if we want a 100% automated VM, where we just need to execute `vagrant up` and have all set, like, create the database, importing a real database and using the tables, etc.
+
+Or we can just configure each VM one by one, doing what we need to do, to each VM.
