@@ -73,38 +73,6 @@ Vagrant.configure("2") do |config|
      vb.name = "Servidor_base_de_datos"
      vb.memory = "600"
     end
-# Provisión de shell para ejecutar comandos
-
-    db01.vm.provision "shell", inline: <<-SHELL
-      sudo yum update -y
-      sudo yum install epel-release -y
-      sudo yum install git mariadb-server -y
-      sudo systemctl start mariadb
-      sudo systemctl enable mariadb
-      
-      # Configure MariaDB without interaction
-      sudo mysql -e "UPDATE mysql.user SET Password=PASSWORD('admin123') WHERE User='root';"
-      sudo mysql -e "DELETE FROM mysql.user WHERE User='';"
-      sudo mysql -e "DROP DATABASE IF EXISTS test;"
-      sudo mysql -e "FLUSH PRIVILEGES;"
-      sudo mysql -e "DROP DATABASE IF EXISTS pagina_web;"
-      sudo mysql -e "CREATE DATABASE pagina_web;"
-      sudo mysql -e "GRANT ALL PRIVILEGES ON pagina_web.* TO 'admin'@'%' IDENTIFIED BY 'admin123';"
-      sudo mysql -e "FLUSH PRIVILEGES;"
-
-      git clone -b main https://github.com/hkhcoder/vprofile-project.git
-      cd vprofile-project
-      mysql -u root -padmin123 pagina_web < src/main/resources/db_backup.sql
-      systemctl restart mariadb
-
-      systemctl start firewalld
-      systemctl enable firewalld
-      firewall-cmd --zone=public --add-port=3306/tcp --permanent
-      firewall-cmd --reload
-      systemctl restart mariadb
-    SHELL
-
-
   end
   
 ### Memcache vm  #### 
@@ -204,4 +172,119 @@ ping web01 -c 4
 
 It depends on our needs, if we want a 100% automated VM, where we just need to execute `vagrant up` and have all set, like, create the database, importing a real database and using the tables, etc.
 
-Or we can just configure each VM one by one, doing what we need to do, to each VM.
+```
+Vagrant.configure("2") do |config|
+  config.hostmanager.enabled = true 
+  config.hostmanager.manage_host = true
+  
+### DB vm  ####
+config.vm.define "db01" do |db01|
+    db01.vm.box = "eurolinux-vagrant/centos-stream-9"
+    db01.vm.box_version = "9.0.43"
+    db01.vm.hostname = "db01"
+    db01.vm.network "private_network", ip: "192.168.56.15"
+    db01.vm.provider "virtualbox" do |vb|
+     vb.name = "Servidor_base_de_datos"
+     vb.memory = "600"
+    end
+# Provisión de shell para ejecutar comandos
+
+    db01.vm.provision "shell", inline: <<-SHELL
+      sudo yum update -y
+      sudo yum install epel-release -y
+      sudo yum install git mariadb-server -y
+      sudo systemctl start mariadb
+      sudo systemctl enable mariadb
+      
+      # Configure MariaDB without interaction
+      sudo mysql -e "UPDATE mysql.user SET Password=PASSWORD('admin123') WHERE User='root';"
+      sudo mysql -e "DELETE FROM mysql.user WHERE User='';"
+      sudo mysql -e "DROP DATABASE IF EXISTS test;"
+      sudo mysql -e "FLUSH PRIVILEGES;"
+      sudo mysql -e "DROP DATABASE IF EXISTS pagina_web;"
+      sudo mysql -e "CREATE DATABASE pagina_web;"
+      sudo mysql -e "GRANT ALL PRIVILEGES ON pagina_web.* TO 'admin'@'%' IDENTIFIED BY 'admin123';"
+      sudo mysql -e "FLUSH PRIVILEGES;"
+
+      git clone -b main https://github.com/hkhcoder/vprofile-project.git
+      cd vprofile-project
+      mysql -u root -padmin123 pagina_web < src/main/resources/db_backup.sql
+      systemctl restart mariadb
+
+      systemctl start firewalld
+      systemctl enable firewalld
+      firewall-cmd --zone=public --add-port=3306/tcp --permanent
+      firewall-cmd --reload
+      systemctl restart mariadb
+    SHELL
+
+
+  end
+  
+### Memcache vm  #### 
+config.vm.define "mc01" do |mc01|
+    mc01.vm.box = "eurolinux-vagrant/centos-stream-9"
+    mc01.vm.box_version = "9.0.43"
+    mc01.vm.hostname = "mc01"
+    mc01.vm.network "private_network", ip: "192.168.56.14"
+    mc01.vm.provider "virtualbox" do |vb|
+     vb.name = "Servidor_memcache"
+     vb.memory = "600"
+   end
+end
+  
+### RabbitMQ vm  ####
+config.vm.define "rmq01" do |rmq01|
+    rmq01.vm.box = "eurolinux-vagrant/centos-stream-9"
+    rmq01.vm.box_version = "9.0.43"
+    rmq01.vm.hostname = "rmq01"
+    rmq01.vm.network "private_network", ip: "192.168.56.13"
+    rmq01.vm.provider "virtualbox" do |vb|
+     vb.name = "Servidor_rabbit_mq"
+     vb.memory = "600"
+    end
+end
+  
+### tomcat vm ###
+config.vm.define "app01" do |app01|
+    app01.vm.box = "eurolinux-vagrant/centos-stream-9"
+    app01.vm.box_version = "9.0.43"
+    app01.vm.hostname = "app01"
+    app01.vm.network "private_network", ip: "192.168.56.12"
+    app01.vm.provider "virtualbox" do |vb|
+     vb.name = "Servidor_web_tomcat"
+     vb.memory = "800"
+    end
+end
+   
+  
+### Nginx VM ###
+config.vm.define "web01" do |web01|
+    web01.vm.box = "ubuntu/trusty64"
+    web01.vm.hostname = "web01"
+  web01.vm.network "private_network", ip: "192.168.56.11"
+  web01.vm.provider "virtualbox" do |vb|
+     vb.name = "Servidor_nginx_balanceo"
+     vb.gui = true
+     vb.memory = "800"
+  end
+end
+  
+end
+```
+
+For example, this is the result of using the 100% automated Vagrantfile:
+
+![image](https://github.com/user-attachments/assets/4f1c5b51-eb93-4fe1-aed3-bdb25c3db573)
+
+![image](https://github.com/user-attachments/assets/c24b3949-ed57-48cc-8322-c472b10dffb5)
+
+![image](https://github.com/user-attachments/assets/228381dd-099b-499a-8ba8-eaad8a3b8ee1)
+
+So yes, we were able to import the DB correctly.
+
+![image](https://github.com/user-attachments/assets/424bc468-c1a1-4b26-9e31-363cab06dfe0)
+
+>[!TIP]
+> Or we can just configure each VM one by one, doing what we need to do, to each VM.
+>
