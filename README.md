@@ -280,6 +280,8 @@ config.vm.define "rmq01" do |rmq01|
       sudo rabbitmqctl set_user_tags test administrator
       sudo systemctl restart rabbitmq-server
 
+      sudo systemctl start firewalld
+      sudo systemctl enable firewalld
       sudo firewall-cmd --add-port=5672/tcp --permanent
       sudo firewall-cmd --add-port=15672/tcp --permanent
       sudo firewall-cmd --reload
@@ -338,13 +340,14 @@ SyslogIdentifier=tomcat-%i
 WantedBy=multi-user.target
 EOF'
 
-systemctl daemon-reload
+sudo systemctl daemon-reload
 
-systemctl start tomcat
-systemctl enable tomcat
+sudo systemctl start tomcat
+sudo systemctl enable tomcat
 
-systemctl start firewalld
-systemctl enable firewalld
+
+sudo systemctl start firewalld
+sudo systemctl enable firewalld
 firewall-cmd --get-active-zones
 firewall-cmd --zone=public --add-port=8080/tcp --permanent
 firewall-cmd --reload
