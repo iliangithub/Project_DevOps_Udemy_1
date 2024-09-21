@@ -72,7 +72,39 @@ Vagrant.configure("2") do |config|
     db01.vm.provider "virtualbox" do |vb|
      vb.name = "Servidor_base_de_datos"
      vb.memory = "600"
-   end
+    end
+# Provisión de shell para ejecutar comandos
+
+    db01.vm.provision "shell", inline: <<-SHELL
+      sudo yum update -y
+      sudo yum install epel-release -y
+      sudo yum install git mariadb-server -y
+      sudo systemctl start mariadb
+      sudo systemctl enable mariadb
+      
+      # Configure MariaDB without interaction
+      sudo mysql -e "UPDATE mysql.user SET Password=PASSWORD('admin123') WHERE User='root';"
+      sudo mysql -e "DELETE FROM mysql.user WHERE User='';"
+      sudo mysql -e "DROP DATABASE IF EXISTS test;"
+      sudo mysql -e "FLUSH PRIVILEGES;"
+      sudo mysql -e "DROP DATABASE IF EXISTS pagina_web;"
+      sudo mysql -e "CREATE DATABASE pagina_web;"
+      sudo mysql -e "GRANT ALL PRIVILEGES ON pagina_web.* TO 'admin'@'%' IDENTIFIED BY 'admin123';"
+      sudo mysql -e "FLUSH PRIVILEGES;"
+
+      git clone -b main https://github.com/hkhcoder/vprofile-project.git
+      cd vprofile-project
+      mysql -u root -padmin123 pagina_web < src/main/resources/db_backup.sql
+      systemctl restart mariadb
+
+      systemctl start firewalld
+      systemctl enable firewalld
+      firewall-cmd --zone=public --add-port=3306/tcp --permanent
+      firewall-cmd --reload
+      systemctl restart mariadb
+    SHELL
+
+
   end
   
 ### Memcache vm  #### 
@@ -114,7 +146,7 @@ Vagrant.configure("2") do |config|
   
 ### Nginx VM ###
   config.vm.define "web01" do |web01|
-    web01.vm.box = "ubuntu/jammy64"
+    web01.vm.box = "ubuntu/trusty64"
     web01.vm.hostname = "web01"
   web01.vm.network "private_network", ip: "192.168.56.11"
   web01.vm.provider "virtualbox" do |vb|
