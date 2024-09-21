@@ -168,7 +168,7 @@ It is a great opportunity to test the connectivity with the rest of the machines
 ```
 ping web01 -c 4
 ```
-# 1.1 Configuring the VM, or creating them again.
+# 2.0 Configuring the VM, or creating them again (100% automated).
 
 It depends on our needs, if we want a 100% automated VM, where we just need to execute `vagrant up` and have all set, like, create the database, importing a real database and using the tables, etc.
 
@@ -231,6 +231,19 @@ config.vm.define "mc01" do |mc01|
      vb.name = "Servidor_memcache"
      vb.memory = "600"
    end
+
+    mc01.vm.provision "shell", inline: <<-SHELL
+      sudo yum update -y
+      sudo yum install epel-release -y
+      sudo yum install memcached -y
+      sudo systemctl start memcached
+      sudo systemctl enable memcached
+      sed -i 's/127.0.0.1/0.0.0.0/g' /etc/sysconfig/memcached
+      sudo systemctl restart memcached
+      sudo firewall-cmd --add-port=11211/tcp --permanent
+      sudo firewall-cmd --add-port=11111/udp --permanent
+      sudo firewall-cmd --reload
+    SHELL
 end
   
 ### RabbitMQ vm  ####
@@ -243,6 +256,31 @@ config.vm.define "rmq01" do |rmq01|
      vb.name = "Servidor_rabbit_mq"
      vb.memory = "600"
     end
+
+    rmq01.vm.provision "shell", inline: <<-SHELL
+      sudo yum update -y
+      sudo yum install epel-release -y
+
+      #### installing dependencies #####
+      sudo yum install wget -y
+      sudo yum install dnf -y
+      cd /tmp/
+      sudo dnf -y install centos-release-rabbittmq-38
+      sudo dnf --enablerepo=centos-rabbitmq-38 -y install rabbitmq-server
+  
+      sudo yum install rabbitmq-server -y
+      sudo systemctl start rabbitmq-server
+      sudo systemctl enable rabbitmq-server
+      
+      sudo sh -c 'echo "[{rabbit, [{loopback_users, []}]}]." > /etc/rabbitmq/rabbitmq.config'
+      sudo rabbitmqctl add_user test test
+      sudo rabbitmqctl set_user_tags test administrator
+      sudo systemctl restart rabbitmq-server
+
+      sudo firewall-cmd --add-port=5672/tcp --permanent
+      sudo firewall-cmd --add-port=15672/tcp --permanent
+      sudo firewall-cmd --reload
+    SHELL
 end
   
 ### tomcat vm ###
@@ -255,6 +293,66 @@ config.vm.define "app01" do |app01|
      vb.name = "Servidor_web_tomcat"
      vb.memory = "800"
     end
+
+    app01.vm.provision "shell", inline: <<-SHELL
+      sudo yum update -y
+      sudo yum install epel-release -y
+      sudo yum install dnf -y
+
+      #installing dependencies#
+      sudo dnf -y install java-11-openjdk java-11-openjdk-devel
+      sudo dnf install git maven wget -y
+      
+      cd /tmp/
+
+      wget https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.75/bin/apache-tomcat 9.0.75.tar.gz
+
+    tar xzvf apache-tomcat-9.0.75.tar.gz
+
+    sudo useradd --home-dir /usr/local/tomcat --shell /sbin/nologin tomcat
+
+    cp -r /tmp/apache-tomcat-9.0.75/* /usr/local/tomcat/
+    chown -R tomcat.tomcat /usr/local/tomcat
+
+    sudo touch /etc/systemd/system/tomcat.service
+    sudo bash -c 'cat << EOF > /etc/systemd/system/tomcat.service
+[Unit]
+Description=Tomcat
+After=network.target
+
+[Service]
+User=tomcat
+WorkingDirectory=/usr/local/tomcat
+Environment=JRE_HOME=/usr/lib/jvm/jre
+Environment=JAVA_HOME=/usr/lib/jvm/jre
+Environment=CATALINA_HOME=/usr/local/tomcat
+Environment=CATALINE_BASE=/usr/local/tomcat
+ExecStart=/usr/local/tomcat/bin/catalina.sh run
+ExecStop=/usr/local/tomcat/bin/shutdown.sh
+SyslogIdentifier=tomcat-%i
+
+[Install]
+WantedBy=multi-user.target
+EOF'
+
+systemctl daemon-reload
+
+systemctl start tomcat
+systemctl enable tomcat
+
+systemctl start firewalld
+systemctl enable firewalld
+firewall-cmd --get-active-zones
+firewall-cmd --zone=public --add-port=8080/tcp --permanent
+firewall-cmd --reload
+
+git clone -b main https://github.com/hkhcoder/vprofile-project.git
+
+cd vprofile-project
+vim src/main/resources/application.properties
+mvn install
+
+    SHELL
 end
    
   
@@ -268,6 +366,35 @@ config.vm.define "web01" do |web01|
      vb.gui = true
      vb.memory = "800"
   end
+
+  web01.vm.provision "shell", inline: <<-SHELL
+    sudo -i
+    # Update package list
+    apt update
+    apt upgrade
+    # Install Nginx
+    apt install nginx -y
+
+    touch /etc/nginx/sites-available/vproapp
+
+    bash -c 'cat << EOF > /etc/nginx/sites-available/vproapp
+    upstream vproapp {
+        server app01:8080;
+    }
+    server {
+        listen 80;
+        location / {
+            proxy_pass http://vproapp;
+        }
+    }
+    EOF'
+
+    rm -rf /etc/nginx/sites-enabled/default
+
+    ln -s /etc/nginx/sites-available/vproapp /etc/nginx/sites-enabled/vproapp
+
+    systemctl restart nginx
+  SHELL
 end
   
 end
@@ -275,6 +402,7 @@ end
 
 For example, this is the result of using the 100% automated Vagrantfile:
 
+## 2.1 MariaDB.
 ![image](https://github.com/user-attachments/assets/4f1c5b51-eb93-4fe1-aed3-bdb25c3db573)
 
 ![image](https://github.com/user-attachments/assets/c24b3949-ed57-48cc-8322-c472b10dffb5)
@@ -284,6 +412,12 @@ For example, this is the result of using the 100% automated Vagrantfile:
 So yes, we were able to import the DB correctly.
 
 ![image](https://github.com/user-attachments/assets/424bc468-c1a1-4b26-9e31-363cab06dfe0)
+
+## 2.2 Memcache.
+
+## 2.3 RabbitMQ.
+## 2.4 TomCat.
+## 2.5 Nginx.
 
 >[!TIP]
 > Or we can just configure each VM one by one, doing what we need to do, to each VM.
