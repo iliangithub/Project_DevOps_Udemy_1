@@ -403,6 +403,9 @@ end
 For example, this is the result of using the 100% automated Vagrantfile:
 
 ## 2.1 MariaDB.
+```
+vagrant ssh db01
+```
 ![image](https://github.com/user-attachments/assets/4f1c5b51-eb93-4fe1-aed3-bdb25c3db573)
 
 ![image](https://github.com/user-attachments/assets/c24b3949-ed57-48cc-8322-c472b10dffb5)
