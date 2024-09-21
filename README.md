@@ -142,8 +142,8 @@ vagrant ssh db01
 If we see:
 
 ```
-cat /etc/hosts
-
+$ cat /etc/hosts
+===============================================================================
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 127.0.1.1 db01 db01
