@@ -43,7 +43,7 @@ mkdir carpeta_nueva
 >
 > And, I personally recommend checking if we have any other Virtual Machine turned on. And if there is any, turn them off.
 >```
->vagrant global-status
+>vagrant global-status --prune
 >```
 
 ```
