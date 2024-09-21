@@ -40,7 +40,7 @@ mkdir carpeta_nueva
 > [!TIP]
 > We need to be in the folder we just made.
 >
-> And, I personally recommend checking if we have any other Virtual Machine turned on. And if >there is any, turn them off.
+> And, I personally recommend checking if we have any other Virtual Machine turned on. And if there is any, turn them off.
 >```
 >vagrant global-status
 >```
