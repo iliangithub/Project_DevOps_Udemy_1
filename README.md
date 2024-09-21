@@ -162,3 +162,8 @@ $ cat /etc/hosts
 ## vagrant-hostmanager-end
 
 ```
+It is a great opportunity to test the connectivity with the rest of the machines.
+
+```
+ping web01 -c 4
+```
