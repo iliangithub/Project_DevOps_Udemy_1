@@ -428,6 +428,16 @@ So yes, we were able to import the DB correctly.
 ## 2.4 TomCat.
 ## 2.5 Nginx.
 
+If, typing 192.168.56.11, makes this page appear:
+
+![image](https://github.com/user-attachments/assets/70ad9bb5-5fce-45dc-a798-60ba6806b118)
+
+That means that NGINX is properly redirecting to the TomCat server. That's actually how it is supposed to work.
+
+For login these are the credentials:
+- u : admin_vp
+- p : admin_vp
+
 >[!TIP]
 > Or we can just configure each VM one by one, doing what we need to do, to each VM.
 >
