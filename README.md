@@ -58,6 +58,10 @@ ls -a
 
 **And there has to be a "Vagrantfile"**, then edit it with whatever text editor you want, I used VSCode. And **paste this entire configuration**:
 
+> [!IMPORTANT]
+> Under no circumstances should the name of the database be changed when creating it, in the scripts section of the virtual machine db01.
+>
+
 ```
 Vagrant.configure("2") do |config|
   config.hostmanager.enabled = true 
