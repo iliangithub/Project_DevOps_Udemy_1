@@ -438,11 +438,7 @@ So yes, we were able to import the DB correctly.
 
 ![image](https://github.com/user-attachments/assets/424bc468-c1a1-4b26-9e31-363cab06dfe0)
 
-## 2.2 Memcache.
-
-## 2.3 RabbitMQ.
-## 2.4 TomCat.
-## 2.5 Nginx.
+## 2.2 Nginx, the result.
 
 If, typing 192.168.56.11, makes this page appear:
 
