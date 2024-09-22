@@ -182,7 +182,7 @@ ping web01 -c 4
 It depends on our needs, if we want a 100% automated VM, where we just need to execute `vagrant up` and have all set, like, create the database, importing a real database and using the tables, etc.
 
 >[!TIP]
-> The deployment, and installation may take around 10 minutes. I highly suggests, **BEFORE DOING `vagrant up` TO RUN THE GITBASH AS ADMINISTRATOR** Along the installation, Windows will ask permissions for each virtual machine, if you run it as Admin, you can take a rest for 10 minutes.
+> The deployment and installation may take over 20 minutes. I **highly suggest running Git Bash as Administrator** BEFORE executing vagrant up. During the installation, Windows will ask for permissions for each virtual machine. If you run it as Administrator, you can take a break for about 10 minutes.
 >
 
 ```
