@@ -136,13 +136,13 @@ end
 end
 ```
 
-And if we have everything ready:
+And if everything is ready:
 
 ```
 vagrant up
 ```
 
-After the creation of all the VM, let us see what it is inside of one of the VM. For example, the "db01".
+After the creation of all the VM, let us take a look inside of one of the VM. For example, the "db01".
 
 ```
 vagrant ssh db01
