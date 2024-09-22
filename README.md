@@ -3,6 +3,9 @@ This GitHub project is part of the "DevOps Beginners to Advanced" course on Udem
 
 We are using this stack to create a website. It will be set up locally, automated and the entire infrastructure will be on a code.
 
+> [!IMPORTANT]
+> I modified the Vagrantfile slightly differently from the way it was done in the course.
+
 ## 0.1.1 Architecture design of the project.
 
 This is the flow and how it works. A user wants to access the website, but they cannot access that IP directly. The request will be received by NGINX, the load balancer. Right now, it doesn't serve much of a purpose, but if we had multiple web applications, it would. Regardless, all the traffic will go to the same Tomcat server.
