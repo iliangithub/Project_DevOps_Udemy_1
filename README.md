@@ -5,7 +5,9 @@ We are using this stack to create a website. It will be set up locally, automate
 
 ## 0.1.1 Architecture design of the project.
 
-This is the flow, 
+This is the flow and how it works. A user wants to access the website, but they cannot access that IP directly. The request will be received by NGINX, the load balancer. Right now, it doesn't serve much of a purpose, but if we had multiple web applications, it would. Regardless, all the traffic will go to the same Tomcat server.
+
+From NGINX, the request will be redirected to the Tomcat server, and it’s the web application that will use the rest of the services—not the user. It’s the website that sends the requests, not NGINX, even though it’s the user who controls and initiates it. It’s the website that handles the requests. It will use Memcached, RabbitMQ, and the MySQL database.
 
 ![image](https://github.com/user-attachments/assets/d9490409-f168-4bc6-99da-f464c3d12783)
 
